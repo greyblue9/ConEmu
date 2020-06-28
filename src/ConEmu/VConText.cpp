@@ -905,11 +905,12 @@ struct Shrinker
 						(indent_min_shrink*cell_width), rigid_elast,
 						(parts[i].Length - indent_min_shrink)*cell_width, indent_elast
 						);
-			else if (parts[i].Flags & TRF_SizeFree)
-				data[i-l].part_elast = sum_k(
-						(space_min_shrink*cell_width), rigid_elast,
-						(parts[i].Length - space_min_shrink)*cell_width, (i < r) ? space_elast : s_tail_elast
-						);
+			else if (parts[i].Flags & TRF_SizeFree) {
+				data[i - l].part_elast = sum_k(
+					(space_min_shrink * cell_width), rigid_elast,
+					(parts[i].Length - space_min_shrink) * cell_width, (unsigned(i) < r) ? space_elast : s_tail_elast
+				);
+			}
 			// Double-width (full-width, CJK, etc.)
 			else if (parts[i].Flags & TRF_TextCJK)
 				data[i-l].part_elast = sum_k(

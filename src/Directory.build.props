@@ -1,0 +1,106 @@
+<!--EXTERNAL_PROPERTIES: TargetArchitecture-->
+<!--EXTERNAL_PROPERTIES: TestNugetRuntimeId-->
+<Project DefaultTargets="UpdateCompileProperties" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\Directory.Build.props" Condition="Exists('..\Directory.Build.props')"/>
+
+  <Target Name="UpdateCompileProperties" BeforeTargets="ClCompile" AfterTargets="FixupClCompileOptions">
+    <PropertyGroup>
+      <TreatWarningAsError>false</TreatWarningAsError>
+      <RunCodeAnalysis>false</RunCodeAnalysis>
+      <RunMsvcAnalysis>false</RunMsvcAnalysis>
+      <NoWarn>78,162,164,168,169,219,251,252,414,429,642,649,652,675,1691,1717,1718,3001,3002,3003,3005,3008</NoWarn>
+      <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+    </PropertyGroup>
+
+    <ItemGroup Label="ProjectConfigurations">
+      <ItemDefinitionGroup>
+        <ClCompile>
+          <PrecompiledHeader>NotUsing</PrecompiledHeader>
+          <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+          <Optimization>Disabled</Optimization>
+          <FunctionLevelLinking>true</FunctionLevelLinking>
+          <IntrinsicFunctions>false</IntrinsicFunctions>
+          <MinimalRebuild>true</MinimalRebuild>
+          <StringPooling>false</StringPooling>
+          <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+          <TreatWarningAsError>false</TreatWarningAsError>
+          <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+          <WarningLevel>Level3</WarningLevel>
+          <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+          <TreatWarningAsError>false</TreatWarningAsError>
+          <MultiProcessorCompilation>false</MultiProcessorCompilation>
+          <StringPooling>false</StringPooling>
+          <ControlFlowGuard>false</ControlFlowGuard>
+          <SupportJustMyCode>false</SupportJustMyCode>
+          <PreprocessorDefinitions>HIDE_TODO;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        </ClCompile>
+        <ResourceCompile>
+          <PreprocessorDefinitions>HIDE_TODO;NOMINMAX;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        </ResourceCompile>
+        <Link>
+          <GenerateDebugInformation>true</GenerateDebugInformation>
+          <EnableCOMDATFolding>false</EnableCOMDATFolding>
+          <OptimizeReferences>false</OptimizeReferences>
+          <GenerateMapFile>true</GenerateMapFile>
+        </Link>
+      </ItemDefinitionGroup>
+      <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'">
+        <ClCompile>
+          <PreprocessorDefinitions>WIN32;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        </ClCompile>
+        <ResourceCompile>
+          <PreprocessorDefinitions>WIN32;_WIN32;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        </ResourceCompile>
+      </ItemDefinitionGroup>
+      <ItemDefinitionGroup Condition="'$(Platform)'=='x64'">
+        <ClCompile>
+          <PreprocessorDefinitions>WIN64;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        </ClCompile>
+        <ResourceCompile>
+          <PreprocessorDefinitions>WIN64;_WIN64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+        </ResourceCompile>
+      </ItemDefinitionGroup>
+    </ItemGroup>
+  </Target>
+
+  <!-- Setup Default symbol and optimization for Configuration -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>false</Optimize>
+    <DebugType>full</DebugType>
+    <DefineConstants>_DEBUG;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugSymbols>true</DebugSymbols>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <DefineConstants>_NDEBUG;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  
+  <!-- Set arch specific properties -->
+  <PropertyGroup>
+    <TargetBits>32</TargetBits>
+    <TargetBits Condition="'$(TargetArchitecture)' == 'x64'">64</TargetBits>
+    <TargetBits Condition="'$(TargetArchitecture)'=='arm64'">64</TargetBits>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(__RuntimeId)' == ''">
+	  <__RuntimeId Condition="'$(Platform)'=='Win32'">win7-x86</__RuntimeId>
+    <__RuntimeId Condition="'$(Platform)' == 'x64'">win7-x64</__RuntimeId>
+    <__RuntimeId Condition="'$(TargetArchitecture)' == 'x64'">win7-x64</__RuntimeId>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetRid Condition="'$(__RuntimeId)' != ''">$(__RuntimeId)</TargetRid>
+    <TargetRid Condition="'$(TestNugetRuntimeId)' != ''">$(TestNugetRuntimeId)</TargetRid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ExcludeMscorlibFacade>true</ExcludeMscorlibFacade>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ZapRequire Condition="'$(ZapRequire)' == ''">0</ZapRequire>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RestoreOutputPath>$(MSBuildProjectDirectory)\obj</RestoreOutputPath>
+  </PropertyGroup>
+</Project>
+

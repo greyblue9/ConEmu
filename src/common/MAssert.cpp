@@ -43,7 +43,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #endif
 
 #ifdef _DEBUG
-static bool gbMyAssertSkip = false;
+static bool gbMyAssertSkip = true;
 bool MyAssertSkip(const wchar_t* pszFile, int nLine, const wchar_t* pszTest, bool abNoPipe)
 {
 	return gbMyAssertSkip; // just for breakpoints
